@@ -5,14 +5,16 @@
  */
 package coursework;
 
+import java.awt.HeadlessException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 
 public class InsertStudent extends javax.swing.JFrame {
 
@@ -43,7 +45,10 @@ public class InsertStudent extends javax.swing.JFrame {
         jtfFNumber = new javax.swing.JTextField();
         jtfKurs = new javax.swing.JTextField();
         btnInsertStudent = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnWriteToFile = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lstStudents = new javax.swing.JList<>();
+        btnShowList = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -64,10 +69,20 @@ public class InsertStudent extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnWriteToFile.setText("Write in File");
+        btnWriteToFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnWriteToFileActionPerformed(evt);
+            }
+        });
+
+        lstStudents.setModel(new DefaultListModel());
+        jScrollPane1.setViewportView(lstStudents);
+
+        btnShowList.setText("Show List");
+        btnShowList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnShowListActionPerformed(evt);
             }
         });
 
@@ -78,29 +93,34 @@ public class InsertStudent extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblFirstName)
-                    .addComponent(lblLastName)
-                    .addComponent(lblAge)
-                    .addComponent(lblFNumber)
-                    .addComponent(lblKurs))
-                .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jtfLastName, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                        .addComponent(jtfKurs, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                        .addComponent(jtfAge, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                        .addComponent(jtfFNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                        .addComponent(jtfFirstName))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnInsertStudent)
-                        .addGap(66, 66, 66)
-                        .addComponent(jButton1)))
-                .addGap(69, 149, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblFirstName)
+                            .addComponent(lblLastName)
+                            .addComponent(lblAge)
+                            .addComponent(lblFNumber)
+                            .addComponent(lblKurs))
+                        .addGap(38, 38, 38)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jtfLastName, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                                .addComponent(jtfKurs, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                                .addComponent(jtfAge, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                                .addComponent(jtfFNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                                .addComponent(jtfFirstName))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnInsertStudent)
+                                .addGap(50, 50, 50)
+                                .addComponent(btnShowList)
+                                .addGap(44, 44, 44)
+                                .addComponent(btnWriteToFile))))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblFirstName)
                     .addComponent(jtfFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -123,8 +143,10 @@ public class InsertStudent extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnInsertStudent)
-                    .addComponent(jButton1))
-                .addContainerGap(151, Short.MAX_VALUE))
+                    .addComponent(btnWriteToFile)
+                    .addComponent(btnShowList))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -138,21 +160,21 @@ public class InsertStudent extends javax.swing.JFrame {
         int Kurs = 0;
         boolean[] flag = new boolean[5];
         if (!"".equals(jtfFirstName.getText())) {
-            if (jtfFirstName.getText().matches("[a-zA-Z]+") && jtfFirstName.getText().length() > 2){
-            FirstName = jtfFirstName.getText();           
-            flag[0]=true;
-            }else{
-              ShowMessage.infoBox("Incorect First Name", "Error: Incorect Information");
-              jtfFirstName.setText("");
+            if (jtfFirstName.getText().matches("[a-zA-Z]+") && jtfFirstName.getText().length() > 2) {
+                FirstName = jtfFirstName.getText();
+                flag[0] = true;
+            } else {
+                ShowMessage.infoBox("Incorect First Name", "Error: Incorect Information");
+                jtfFirstName.setText("");
             }
         } else {
             ShowMessage.infoBox("Please Insert First Name", "Error: Missing Information");
         }
         if (!"".equals(jtfLastName.getText())) {
-            if (jtfLastName.getText().matches("[a-zA-Z]+") && jtfLastName.getText().length() > 2){
-            LastName = jtfLastName.getText();           
-            flag[1]=true;
-            }else{
+            if (jtfLastName.getText().matches("[a-zA-Z]+") && jtfLastName.getText().length() > 2) {
+                LastName = jtfLastName.getText();
+                flag[1] = true;
+            } else {
                 jtfLastName.setText("");
                 ShowMessage.infoBox("Incorect Last Name", "Error: Incorect Information");
             }
@@ -160,11 +182,11 @@ public class InsertStudent extends javax.swing.JFrame {
             ShowMessage.infoBox("Please Insert Last Name", "Error: Missing Information");
         }
         if (!"".equals(jtfAge.getText())) {
-            if (jtfAge.getText().matches("[0-9]+")){
-            Age = Integer.parseInt(jtfAge.getText());
-            
-            flag[2]=true;
-            }else{
+            if (jtfAge.getText().matches("[0-9]+")) {
+                Age = Integer.parseInt(jtfAge.getText());
+
+                flag[2] = true;
+            } else {
                 jtfAge.setText("");
                 ShowMessage.infoBox("Incorect Age", "Error: Incorect Information");
             }
@@ -172,11 +194,11 @@ public class InsertStudent extends javax.swing.JFrame {
             ShowMessage.infoBox("Please Insert Age", "Error: Missing Information");
         }
         if (!"".equals(jtfFNumber.getText())) {
-            if (jtfFNumber.getText().matches("[0-9]+")){
-            FNumber = Integer.parseInt(jtfFNumber.getText());
-            
-            flag[3]=true;
-            }else{
+            if (jtfFNumber.getText().matches("[0-9]+")) {
+                FNumber = Integer.parseInt(jtfFNumber.getText());
+
+                flag[3] = true;
+            } else {
                 jtfFNumber.setText("");
                 ShowMessage.infoBox("Incorect F. Number", "Error: Incorect Information");
             }
@@ -184,30 +206,30 @@ public class InsertStudent extends javax.swing.JFrame {
             ShowMessage.infoBox("Please Insert F. Number", "Error: Missing Information");
         }
         if (!"".equals(jtfKurs.getText())) {
-            if (jtfKurs.getText().matches("[0-9]+")){        
+            if (jtfKurs.getText().matches("[0-9]+")) {
                 Kurs = Integer.parseInt(jtfKurs.getText());
-                flag[4]=true;
-            }else{
+                flag[4] = true;
+            } else {
                 ShowMessage.infoBox("Incorect Kurs", "Error: Incorect Information");
                 jtfKurs.setText("");
             }
         } else {
             ShowMessage.infoBox("Please Insert Kurs", "Error: Missing Information");
         }
-        if (areAllTrue(flag)){
-        Student s = new Student(FNumber, Kurs, FirstName, LastName, Age);
-        StudentList.add(s);
-        jtfFirstName.setText("");
-        jtfLastName.setText("");
-        jtfAge.setText("");
-        jtfFNumber.setText("");
-        jtfKurs.setText("");
+        if (areAllTrue(flag)) {
+            Student s = new Student(FNumber, Kurs, FirstName, LastName, Age);
+            StudentList.add(s);
+            jtfFirstName.setText("");
+            jtfLastName.setText("");
+            jtfAge.setText("");
+            jtfFNumber.setText("");
+            jtfKurs.setText("");
         }
 // TODO add your handling code here:
     }//GEN-LAST:event_btnInsertStudentMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-String file_name = "D:\\Students.txt";
+    private void btnWriteToFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWriteToFileActionPerformed
+        String file_name = "D:\\Students.txt";
         try {
             new PrintWriter(file_name).close();
         } catch (FileNotFoundException ex) {
@@ -233,8 +255,23 @@ String file_name = "D:\\Students.txt";
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-    
+
+
+    }//GEN-LAST:event_btnWriteToFileActionPerformed
+
+    private void btnShowListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowListActionPerformed
+        // TODO add your handling code here:
+        for (Iterator it = StudentList.iterator(); it.hasNext();) {
+            Object item = it.next();
+            ((DefaultListModel)this.lstStudents.getModel()).addElement(item);
+        }
+        
+    }//GEN-LAST:event_btnShowListActionPerformed
+
+    public InsertStudent(JList<String> lstStudents) throws HeadlessException {
+        this.lstStudents = lstStudents;
+    }
+
     public static boolean areAllTrue(boolean[] array) {
         for (boolean b : array) {
             if (!b) {
@@ -266,7 +303,7 @@ String file_name = "D:\\Students.txt";
         }
         //</editor-fold>
         //</editor-fold>
-        
+
         //</editor-fold>
         //</editor-fold>
 
@@ -278,7 +315,9 @@ String file_name = "D:\\Students.txt";
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnInsertStudent;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnShowList;
+    private javax.swing.JButton btnWriteToFile;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jtfAge;
     private javax.swing.JTextField jtfFNumber;
     private javax.swing.JTextField jtfFirstName;
@@ -289,5 +328,6 @@ String file_name = "D:\\Students.txt";
     private javax.swing.JLabel lblFirstName;
     private javax.swing.JLabel lblKurs;
     private javax.swing.JLabel lblLastName;
+    private javax.swing.JList<String> lstStudents;
     // End of variables declaration//GEN-END:variables
 }
