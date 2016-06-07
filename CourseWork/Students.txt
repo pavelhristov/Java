@@ -1,0 +1,5 @@
+Name: Ivan Ivanov, Age: 20, FNumber: 12340001, Kurs: 1
+Name: Ivan Ivanov, Age: 20, FNumber: 12340002, Kurs: 1
+Name: Ivan Ivanov, Age: 20, FNumber: 12340003, Kurs: 1
+Name: Ivan Ivanov, Age: 20, FNumber: 12340004, Kurs: 1
+Name: Ivan Ivanov, Age: 20, FNumber: 12340005, Kurs: 1

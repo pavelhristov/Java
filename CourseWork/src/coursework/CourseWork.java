@@ -22,22 +22,22 @@ public class CourseWork {
      */
     public static void main(String[] args) throws FileNotFoundException, IOException {
         // TODO code application logic here
-        ArrayList<Student> List1 = new ArrayList<>();   //StudentList / moved
+        ArrayList<Student> List1 = new ArrayList<>();   //StudentList /console app only
         int count = 5;
         
         /*InsertStudent form1 = new InsertStudent();  //calling GUI / no longer needed
         form1.setVisible(true);*/
 
         for (int i = 0; i < count; i++) {
-            Student s = new Student(12340001+i);  // testing StudentList/no longer needed
+            Student s = new Student(12340001+i);  // testing StudentList/console app only
             List1.add(s);
         }
 
-        String file_name = "Students.txt";   //asaign text file / moved 
+        String file_name = "Students.txt";   //asaign text file /console app only
         new PrintWriter(file_name).close();
 
         try {
-            FileWrite data = new FileWrite(file_name, true);    //write in file / moved
+            FileWrite data = new FileWrite(file_name, true);    //write in file /console app only
             for (Object item : List1) {
                 data.writeToFile(item.toString());
             }
@@ -46,7 +46,7 @@ public class CourseWork {
         }
 
         try {
-            FileRead file = new FileRead(file_name);   //read in file / moved
+            FileRead file = new FileRead(file_name);   //read in file / console app only
             String[] aryLines = file.OpenFile();
 
             for (String aryLine : aryLines) {
